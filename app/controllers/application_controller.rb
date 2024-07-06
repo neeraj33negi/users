@@ -1,18 +1,20 @@
 class ApplicationController < ActionController::Base
-  AUTH_HEADER = "Authorization".freeze
-
-  before_action :authenticate_request
-
-  private def authenticate_request
-    return if header_matches?
-
-    respond_to do |format|
-      format.html { render "access_denied", status: :unauthorized }
-      format.json { render json: { error: "Access denied"}, status: :unauthorized }
-    end
+  def render_response(status, message)
+    render json: {
+      status: status,
+      message: message
+    }, status: status
   end
 
-  private def header_matches?
-    request.headers[AUTH_HEADER] == SECRET_API_KEY
+  def render_success(message = {})
+    render json: {
+      success: true
+    }.merge(message), status: 200
+  end
+
+  def render_error(status, message = {})
+    render json: {
+      success: false
+    }.merge(message), status: status
   end
 end
