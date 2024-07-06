@@ -16,3 +16,12 @@ class User < ApplicationRecord
     self.campaigns_list ||= []
   end
 end
+
+
+
+# SELECT projection.* FROM users, JSON_TABLE(campaigns_list,
+#   '$[*]' COLUMNS (
+#     campaign_id VARCHAR(10) PATH '$.campaign_id',
+#     campaign_name VARCHAR(10) PATH '$.campaign_name'
+#   )
+# ) AS projection where campaign_name='cam2';
