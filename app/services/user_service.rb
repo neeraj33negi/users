@@ -100,19 +100,6 @@ class UserService
     if params["name"].blank? || params["email"].blank?
       raise MissingDataError.new("Name or Email missing")
     end
-    if params["campaigns_list"].present?
-      unless params["campaigns_list"].is_a?(Array)
-        raise InvalidDataError.new("Invalid Campaign Data")
-      end
-      params["campaigns_list"].each do |campaign_data|
-        if campaign_data.blank? || !campaign_data.is_a?(Hash)
-          raise InvalidDataError.new("Invalid Campaign Data")
-        end
-        if campaign_data["campaign_name"].blank? || campaign_data["campaign_id"].blank?
-          raise InvalidDataError.new("Incomplete or missing Campaign Data")
-        end
-      end
-    end
   end
 
   private def page_value

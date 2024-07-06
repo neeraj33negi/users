@@ -3,6 +3,8 @@ class User < ApplicationRecord
   validates :name, :email, presence: true
   validates :email, uniqueness: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validate :campaigns_list_is_valid
+
   before_create :ensure_empty_campaign_if_missing
 
   ## This is not optimal, this can fire a large IN query
@@ -29,5 +31,24 @@ class User < ApplicationRecord
 
   private def ensure_empty_campaign_if_missing
     self.campaigns_list ||= []
+  end
+
+  private def campaigns_list_is_valid
+    if campaigns_list.present?
+      unless campaigns_list.is_a?(Array)
+        self.errors.add(:campaigns_list, "Invalid Campaign Data")
+        return
+      end
+      campaigns_list.each do |campaign_data|
+        if campaign_data.blank? || !campaign_data.is_a?(Hash)
+          self.errors.add(:campaigns_list, "Invalid Campaign Data")
+          return
+        end
+        if campaign_data["campaign_name"].blank? || campaign_data["campaign_id"].blank?
+          self.errors.add(:campaigns_list, "Incomplete or missing Campaign Data")
+          return
+        end
+      end
+    end
   end
 end
