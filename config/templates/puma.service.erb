@@ -12,8 +12,8 @@ WantedBy=multi-user.target
 Type=simple
 User=deployer
 WorkingDirectory=<%= fetch(:deploy_to) %>/current
-ExecStart=/home/deployer/.rbenv/shims/bundle exec /home/deployer/.rbenv/shims/puma -C <%= fetch(:deploy_to) %>/shared/puma.rb
-ExecReload=/home/deployer/.rbenv/shims/bundle exec /home/deployer/.rbenv/shims/pumactl --state <%= fetch(:deploy_to) %>/shared/tmp/pids/puma.state phased-restart
+ExecStart=/home/ubuntu/.rbenv/shims/bundle exec /home/ubuntu/.rbenv/shims/puma -C <%= fetch(:deploy_to) %>/shared/puma.rb
+ExecReload=/home/ubuntu/.rbenv/shims/bundle exec /home/ubuntu/.rbenv/shims/pumactl --state <%= fetch(:deploy_to) %>/shared/tmp/pids/puma.state phased-restart
 Restart=always
 Environment=RAILS_ENV=<%= fetch(:rails_env) %>
 Environment=PUMA_DEBUG=1
