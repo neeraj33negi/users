@@ -1,0 +1,44 @@
+#!/usr/bin/env puma
+# Generated via capistrano
+
+directory "<%= fetch(:deploy_to) %>/current"
+rackup "<%= fetch(:deploy_to) %>/current/config.ru"
+environment "<%= fetch(:rails_env)%>"
+pidfile "<%= fetch(:deploy_to) %>/shared/tmp/pids/puma.pid"
+state_path "<%= fetch(:deploy_to) %>/shared/tmp/pids/puma.state"
+stdout_redirect "<%= fetch(:deploy_to) %>/shared/log/puma_access.log", "<%= fetch(:deploy_to) %>/shared/log/puma_error.log", true
+threads <%= fetch(:puma_min_threads).to_i %>, <%= fetch(:puma_max_threads).to_i %>
+workers <%= fetch(:puma_workers).to_i %>
+bind "unix://<%= fetch(:deploy_to) %>/shared/tmp/sockets/puma.sock"
+prune_bundler
+on_restart do
+  puts "Refreshing Gemfile"
+  ENV["BUNDLE_GEMFILE"] = ""
+end
+
+on_worker_boot do
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+end
+
+before_fork do
+  def total_memory
+    File.readlines('/proc/meminfo').each do |t|
+      return t.split(/ +/)[1].to_i / 1024 if t.start_with?('MemTotal:')
+    end
+  end
+
+  require 'puma_worker_killer'
+
+  PumaWorkerKiller.config do |config|
+    config.ram           = total_memory rescue 1024 * 2
+    config.frequency     = 5    # seconds
+    config.percent_usage = 0.80
+    config.rolling_restart_frequency = false
+    config.reaper_status_logs = true # setting this to false will not log lines like:
+    # PumaWorkerKiller: Consuming 54.34765625 mb with master and 2 workers.
+
+    config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
+    config.rolling_pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed by rolling restart" }
+  end
+  PumaWorkerKiller.start
+end

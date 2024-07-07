@@ -10,7 +10,7 @@ WantedBy=multi-user.target
 
 [Service]
 Type=simple
-User=deployer
+User=ubuntu
 WorkingDirectory=<%= fetch(:deploy_to) %>/current
 ExecStart=/home/ubuntu/.rbenv/shims/bundle exec /home/ubuntu/.rbenv/shims/puma -C <%= fetch(:deploy_to) %>/shared/puma.rb
 ExecReload=/home/ubuntu/.rbenv/shims/bundle exec /home/ubuntu/.rbenv/shims/pumactl --state <%= fetch(:deploy_to) %>/shared/tmp/pids/puma.state phased-restart

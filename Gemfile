@@ -17,7 +17,7 @@ gem "bootsnap", require: false
 gem 'net-ssh'
 gem 'ed25519', '>= 1.2', '< 2.0'
 gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
-
+gem "puma_worker_killer"
 
 group :development, :test do
   gem "capistrano", require: false
