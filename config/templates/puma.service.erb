@@ -1,0 +1,19 @@
+# Reference: https://github.com/puma/puma/blob/master/docs/systemd.md
+# Generated via capistrano
+
+[Unit]
+Description=Puma HTTP Server
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=deployer
+WorkingDirectory=<%= fetch(:deploy_to) %>/current
+ExecStart=/home/deployer/.rbenv/shims/bundle exec /home/deployer/.rbenv/shims/puma -C <%= fetch(:deploy_to) %>/shared/puma.rb
+ExecReload=/home/deployer/.rbenv/shims/bundle exec /home/deployer/.rbenv/shims/pumactl --state <%= fetch(:deploy_to) %>/shared/tmp/pids/puma.state phased-restart
+Restart=always
+Environment=RAILS_ENV=<%= fetch(:rails_env) %>
+Environment=PUMA_DEBUG=1

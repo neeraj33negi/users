@@ -12,12 +12,19 @@ gem "stimulus-rails"
 gem "jbuilder"
 gem "representable"
 gem "multi_json"
-
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
+gem 'net-ssh'
+gem 'ed25519', '>= 1.2', '< 2.0'
+gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 
 
 group :development, :test do
+  gem "capistrano", require: false
+  gem "capistrano-bundler", require: false
+  gem "capistrano-passenger", require: false
+  gem "capistrano-rails", require: false
+  gem "capistrano-rbenv", require: false
   gem 'faker'
   gem "byebug"
   gem "rspec-rails"
