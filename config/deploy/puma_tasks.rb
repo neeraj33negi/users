@@ -59,6 +59,6 @@ namespace :deploy do
     end
   end
 
-  # after "deploy:generate_config_from_secrets", "deploy:puma:config"
-  # after "deploy:symlink:release", "deploy:puma:service"
+  after "deploy:generate_config_from_secrets", "deploy:puma:config"
+  after "deploy:symlink:release", "deploy:puma:service"
 end
