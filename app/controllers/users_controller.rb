@@ -1,5 +1,10 @@
 class UsersController < BaseAuthenticatedController
   skip_before_action :verify_authenticity_token
+  # before_action :authenticate_user!
+
+  def all
+
+  end
 
   def index
     service = load_service
